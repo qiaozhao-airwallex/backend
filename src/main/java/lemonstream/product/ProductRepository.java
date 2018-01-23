@@ -1,5 +1,6 @@
 package lemonstream.product;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,13 +13,22 @@ public class ProductRepository {
         return nextId;
     }
 
-    public Long add(Product product) {
+    public Product add(Product product) {
         Long id = generateNextId();
+        product.setId(id);
         products.put(id, product);
-        return id;
+        return product;
     }
 
     public Product findOne(Long id) {
         return products.get(id);
+    }
+
+    public Collection<Product> list() {
+        return products.values();
+    }
+
+    public void deleteAll() {
+        products.clear();
     }
 }
