@@ -4,31 +4,46 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ProductRepository {
-    private Map<Long, Product> products = new HashMap<>();
-    private Long nextId = 0L;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-    public synchronized Long generateNextId() {
-        nextId++;
-        return nextId;
-    }
+@Repository
+public interface ProductRepository  extends CrudRepository<Product, Long> {
 
-    public Product add(Product product) {
-        Long id = generateNextId();
-        product.setId(id);
-        products.put(id, product);
-        return product;
-    }
-
-    public Product findOne(Long id) {
-        return products.get(id);
-    }
-
-    public Collection<Product> list() {
-        return products.values();
-    }
-
-    public void deleteAll() {
-        products.clear();
-    }
+    Collection<Product> findByPublished(boolean published);
+//    private Map<Long, Product> published = new HashMap<>();
+//    private Map<Long, Product> unPublished = new HashMap<>();
+//    private Long nextId = 0L;
+//
+//    public synchronized Long generateNextId() {
+//        nextId++;
+//        return nextId;
+//    }
+//
+//    public Product add(Product product) {
+//        Long id = generateNextId();
+//        product.setId(id);
+//        if (product.isPublished()) {
+//            published.put(id, product);
+//        } else {
+//            unPublished.put(id, product);
+//        }
+//        return product;
+//    }
+//
+//    public Product findOne(Long id) {
+//        Product one = published.get(id);
+//        if (one != null) {
+//            return one;
+//        }
+//        return unPublished.get(id);
+//    }
+//
+//    public Collection<Product> listPublished() {
+//        return published.values();
+//    }
+//
+//    public Collection<Product> listUnPublished() {
+//        return unPublished.values();
+//    }
 }

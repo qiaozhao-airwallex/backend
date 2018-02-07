@@ -3,6 +3,7 @@ package lemonstream;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -14,10 +15,7 @@ import lemonstream.product.ProductService;
 @Configuration
 public class AppConfig {
 
-    @Bean
-    public ProductRepository productRepository() {
-        return new ProductRepository();
-    }
+    private String imageUploadedLocation = "uploaded";
 
     @Bean
     public ProductService productService() {
@@ -31,15 +29,25 @@ public class AppConfig {
 
     @Bean
     public ImageService imageService() {
-        return new ImageService("uploaded");
+        return new ImageService(imageUploadedLocation);
     }
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurerAdapter() {
             @Override
+            public void addResourceHandlers(ResourceHandlerRegistry registry) {
+                registry
+                        .addResourceHandler("/uploaded/**")
+                        .addResourceLocations("file:./" + imageUploadedLocation + "/");
+            }
+
+            @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**");
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("*")
+                        .allowedHeaders("*");
             }
         };
     }

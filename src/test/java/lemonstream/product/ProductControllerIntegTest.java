@@ -43,12 +43,12 @@ public class ProductControllerIntegTest extends BaseControllerIntegTest {
 
         Product createdProduct = retrieveProduct(productId1);
         assertThat(createdProduct, notNullValue());
-        assertThat(createdProduct.getName(), is("name1"));
+        assertThat(createdProduct.getSubject(), is("name1"));
         assertThat(createdProduct.getDescription(), is("description1"));
         assertThat(createdProduct.getPrice(), is(new BigDecimal("11.23")));
-        assertThat(createdProduct.getImageInfo(), notNullValue());
-        assertThat(createdProduct.getImageInfo().getOriginalFileName(), is("originalFileName"));
-        assertThat(createdProduct.getImageInfo().getTargetFileName(), is("targetFileName"));
+        assertThat(createdProduct.getMainImage(), notNullValue());
+        assertThat(createdProduct.getMainImage().getOriginalFileName(), is("originalFileName"));
+        assertThat(createdProduct.getMainImage().getTargetFileName(), is("targetFileName"));
     }
 
     @Test
@@ -65,22 +65,22 @@ public class ProductControllerIntegTest extends BaseControllerIntegTest {
         assertThat(listResponse.getBody(), notNullValue());
         assertThat(listResponse.getBody().size(), is(2));
         assertThat(listResponse.getBody().get(0), notNullValue());
-        assertThat(listResponse.getBody().get(0).getName(), notNullValue());
-        assertThat(listResponse.getBody().get(0).getName(), is("name1"));
+        assertThat(listResponse.getBody().get(0).getSubject(), notNullValue());
+        assertThat(listResponse.getBody().get(0).getSubject(), is("name1"));
         assertThat(listResponse.getBody().get(0).getDescription(), is("description1"));
         assertThat(listResponse.getBody().get(0).getPrice(), is(new BigDecimal("11.11")));
-        assertThat(listResponse.getBody().get(0).getImageInfo(), notNullValue());
-        assertThat(listResponse.getBody().get(0).getImageInfo().getOriginalFileName(), is("originalFileName"));
-        assertThat(listResponse.getBody().get(0).getImageInfo().getTargetFileName(), is("targetFileName"));
+        assertThat(listResponse.getBody().get(0).getMainImage(), notNullValue());
+        assertThat(listResponse.getBody().get(0).getMainImage().getOriginalFileName(), is("originalFileName"));
+        assertThat(listResponse.getBody().get(0).getMainImage().getTargetFileName(), is("targetFileName"));
 
         assertThat(listResponse.getBody().get(1), notNullValue());
-        assertThat(listResponse.getBody().get(1).getName(), notNullValue());
-        assertThat(listResponse.getBody().get(1).getName(), is("name2"));
+        assertThat(listResponse.getBody().get(1).getSubject(), notNullValue());
+        assertThat(listResponse.getBody().get(1).getSubject(), is("name2"));
         assertThat(listResponse.getBody().get(1).getDescription(), is("description2"));
         assertThat(listResponse.getBody().get(1).getPrice(), is(new BigDecimal("22.22")));
-        assertThat(listResponse.getBody().get(1).getImageInfo(), notNullValue());
-        assertThat(listResponse.getBody().get(1).getImageInfo().getOriginalFileName(), is("originalFileName2"));
-        assertThat(listResponse.getBody().get(1).getImageInfo().getTargetFileName(), is("targetFileName2"));
+        assertThat(listResponse.getBody().get(1).getMainImage(), notNullValue());
+        assertThat(listResponse.getBody().get(1).getMainImage().getOriginalFileName(), is("originalFileName2"));
+        assertThat(listResponse.getBody().get(1).getMainImage().getTargetFileName(), is("targetFileName2"));
     }
 
     private Product retrieveProduct(Long productId) {
@@ -91,10 +91,10 @@ public class ProductControllerIntegTest extends BaseControllerIntegTest {
 
     private Long createProduct(String name, String description, BigDecimal price, ImageInfo imageInfo) {
         Product product = new Product();
-        product.setName(name);
+        product.setSubject(name);
         product.setDescription(description);
         product.setPrice(price);
-        product.setImageInfo(imageInfo);
+        product.setMainImage(imageInfo);
         ResponseEntity<Product> response =
                 template.postForEntity(baseURL.toString() + "product", product, Product.class);
 

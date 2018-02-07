@@ -10,18 +10,22 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public Product create(Product product) {
-        return productRepository.add(product);
+        product.getOtherImages().forEach(item -> {
+            item.setProduct(product);
+        });
+        return productRepository.save(product);
     }
 
     public Product findOne(Long id) {
         return productRepository.findOne(id);
     }
 
-    public Collection<Product> list() {
-        return productRepository.list();
+    public Collection<Product> listPublished() {
+        return productRepository.findByPublished(true);
     }
 
-    public void deleteAll() {
-        productRepository.deleteAll();
+    public Collection<Product> listUnPublished() {
+        return productRepository.findByPublished(false);
     }
+
 }

@@ -11,9 +11,11 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+@Service
 public class ImageService {
 
     private final Path rootLocation;
@@ -72,6 +74,14 @@ public class ImageService {
             }
         } catch (MalformedURLException e) {
             throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+        }
+    }
+
+    public void delete(String fileName) {
+        try {
+            Files.delete(this.rootLocation.resolve(fileName));
+        } catch (IOException e) {
+            throw new StorageFileNotFoundException("Could not delete file: " + fileName, e);
         }
     }
 }
