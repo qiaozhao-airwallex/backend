@@ -35,10 +35,10 @@ public class Product {
             targetEntity = ImageInfo.class,
             orphanRemoval = true)
     @OrderBy("displayOrder ASC")
-    private List<ImageInfo> otherImages = new ArrayList<>();
+    private List<ImageInfo> imageList = new ArrayList<>();
 
     @Column
-    private boolean published;
+    private Boolean published;
 
     public String getSubject() {
         return subject;
@@ -64,19 +64,19 @@ public class Product {
         return id;
     }
 
-    public boolean isPublished() {
+    public void setImageList(List<ImageInfo> imageList) {
+        this.imageList = imageList;
+    }
+
+    public List<ImageInfo> getImageList() {
+        return imageList;
+    }
+
+    public Boolean getPublished() {
         return published;
     }
 
-    public void setPublished(boolean published) {
+    public void setPublished(Boolean published) {
         this.published = published;
-    }
-
-    public void setOtherImages(List<ImageInfo> otherImages) {
-        this.otherImages = otherImages;
-    }
-
-    public List<ImageInfo> getOtherImages() {
-        return otherImages;
     }
 }

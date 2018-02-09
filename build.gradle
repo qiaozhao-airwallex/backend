@@ -25,6 +25,8 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
+    compile "org.apache.commons:commons-io:1.3.2"
+    compile "commons-beanutils:commons-beanutils:1.9.3"
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     // tag::jetty[]
     compile("org.springframework.boot:spring-boot-starter-web") {

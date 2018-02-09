@@ -1,11 +1,7 @@
 package lemonstream.product;
 
-import java.io.IOException;
 import java.util.Collection;
 
-import javax.servlet.http.HttpServletRequest;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +18,6 @@ import lemonstream.util.RestPreconditions;
 @RestController
 @RequestMapping("/product")
 public class ProductController {
-
-    @Autowired
-    ObjectMapper objectMapper;
 
     @Autowired
     private ProductService productService;
@@ -67,10 +60,13 @@ public class ProductController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseBody
-    public ResponseEntity update(@PathVariable Long id, HttpServletRequest request) throws IOException {
-        Product product = productService.findOne(id);
-        Product updatedProduct = objectMapper.readerForUpdating(product).readValue(request.getReader());
-
+    public ResponseEntity update(@PathVariable Long id, @RequestBody Product updateRequest) {
+        try {
+            productService.update(id, updateRequest);
+        } catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

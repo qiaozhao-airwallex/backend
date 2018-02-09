@@ -1,5 +1,6 @@
 package lemonstream.image;
 
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,13 +29,13 @@ public class ImageInfo {
     @Column(name = "filename")
     private String targetFileName;
 
+    @Column(name = "dis_order")
+    private Integer displayOrder;
+
     @ManyToOne
     @JoinColumn(name = "product_id")
     @JsonIgnore
     private Product product;
-
-    @Column(name = "dis_order")
-    private Integer displayOrder;
 
     public ImageInfo() {
     }
@@ -63,4 +64,42 @@ public class ImageInfo {
     public void setProduct(Product product) {
         this.product = product;
     }
+
+    public Integer getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setOriginalFileName(String originalFileName) {
+        this.originalFileName = originalFileName;
+    }
+
+    public void setTargetFileName(String targetFileName) {
+        this.targetFileName = targetFileName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || !(obj instanceof ImageInfo)) {
+            return false;
+        }
+        ImageInfo other = (ImageInfo) obj;
+        return Objects.equals(getId(), other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
+    }
+
 }
