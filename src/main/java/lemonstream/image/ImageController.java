@@ -1,13 +1,8 @@
 package lemonstream.image;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import lemonstream.util.RestPreconditions;
+import lemonstream.exception.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/image")
@@ -26,26 +21,14 @@ public class ImageController {
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<ImageInfo> create(@RequestParam("file") MultipartFile file) {
-        ImageInfo imageInfo = null;
-        try {
-            imageInfo = imageService.create(file);
-        } catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(imageInfo, HttpStatus.CREATED);
+    public ImageInfo create(@RequestParam("file") MultipartFile file) throws EntityNotFoundException {
+        return imageService.create(file);
     }
 
 
     @RequestMapping(value = "/{fileName:.+}", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity delete(@PathVariable("fileName") String fileName) {
-        try {
+    public void delete(@PathVariable("fileName") String fileName) throws EntityNotFoundException {
             imageService.delete(fileName);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
     }
-
 }

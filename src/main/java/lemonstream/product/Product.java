@@ -12,10 +12,19 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 
 import lemonstream.image.ImageInfo;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "product")
 public class Product {
@@ -25,6 +34,7 @@ public class Product {
     private Long id;
 
     @Column
+    @NotNull
     private String subject;
 
     @Column
@@ -38,45 +48,7 @@ public class Product {
     private List<ImageInfo> imageList = new ArrayList<>();
 
     @Column
+    @NotNull
     private Boolean published;
 
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setImageList(List<ImageInfo> imageList) {
-        this.imageList = imageList;
-    }
-
-    public List<ImageInfo> getImageList() {
-        return imageList;
-    }
-
-    public Boolean getPublished() {
-        return published;
-    }
-
-    public void setPublished(Boolean published) {
-        this.published = published;
-    }
 }
