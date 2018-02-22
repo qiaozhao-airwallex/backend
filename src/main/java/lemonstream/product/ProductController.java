@@ -1,5 +1,6 @@
 package lemonstream.product;
 
+import java.security.Principal;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lemonstream.exception.EntityNotFoundException;
 import lemonstream.exception.InvalidParameterException;
 
 @RestController
@@ -30,7 +32,7 @@ public class ProductController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Product findOne(@PathVariable("id") Long id) {
+    public Product findOne(@PathVariable("id") Long id) throws EntityNotFoundException {
         return productService.findOne(id);
     }
 
@@ -38,7 +40,8 @@ public class ProductController {
     @ResponseBody
     public Collection<Product> list(@RequestParam String category) {
         if ("published".equals(category)) {
-            return productService.listPublished();
+            Collection<Product> products = productService.listPublished();
+            return products;
         } else if ("unPublished".equals(category)){
             return productService.listUnPublished();
         }

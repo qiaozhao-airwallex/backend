@@ -6,8 +6,11 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
@@ -17,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 
 import lemonstream.BaseControllerIntegTest;
 import lemonstream.image.ImageInfo;
+import lemonstream.user.User;
 
 public class ProductControllerIntegTest extends BaseControllerIntegTest {
 

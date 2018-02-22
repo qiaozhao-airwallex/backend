@@ -1,5 +1,7 @@
 package lemonstream.image;
 
+import java.security.Principal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,14 +23,14 @@ public class ImageController {
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ImageInfo create(@RequestParam("file") MultipartFile file) throws EntityNotFoundException {
+    public ImageInfo create(@RequestParam("file") MultipartFile file, Principal principal) throws EntityNotFoundException {
         return imageService.create(file);
     }
 
 
     @RequestMapping(value = "/{fileName:.+}", method = RequestMethod.DELETE)
     @ResponseBody
-    public void delete(@PathVariable("fileName") String fileName) throws EntityNotFoundException {
+    public void delete(@PathVariable("fileName") String fileName, Principal principal) throws EntityNotFoundException {
             imageService.delete(fileName);
     }
 }
