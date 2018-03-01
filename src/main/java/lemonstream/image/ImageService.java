@@ -15,73 +15,38 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import lemonstream.exception.AuthorizationFailureException;
+import lemonstream.user.User;
+
 @Service
 public class ImageService {
-
-    private final Path rootLocation;
 
     @Autowired
     private ImageRepository imageRepository;
 
     @Autowired
-    public ImageService(String uploadRootLocation) {
-        this.rootLocation = Paths.get(uploadRootLocation);
-    }
+    private PhysicalImageRepository physicalImageRepository;
 
-    public ImageInfo create(MultipartFile imageFile) {
+    public ImageInfo create(User user, MultipartFile imageFile) {
         String originalFileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
         String targetFileName = UUID.randomUUID().toString() + ".webp";
-        storeFile(imageFile, originalFileName, targetFileName);
+        physicalImageRepository.save(imageFile, originalFileName, targetFileName);
 
         ImageInfo imageInfo = new ImageInfo(originalFileName, targetFileName);
-        imageRepository.add(imageInfo);
+        imageInfo.setCreatedBy(user);
+        imageRepository.save(imageInfo);
         return imageInfo;
     }
 
-    private void storeFile(MultipartFile imageFile, String originalFileName, String targetFileName) {
-        try {
-            if (imageFile.isEmpty()) {
-                throw new StorageException("Failed to store empty file " + originalFileName);
-            }
-            if (originalFileName.contains("..")) {
-                // This is a security check
-                throw new StorageException(
-                        "Cannot store file with relative path outside current directory "
-                                + originalFileName);
-            }
-            Files.copy(imageFile.getInputStream(), this.rootLocation.resolve(targetFileName),
-                    StandardCopyOption.REPLACE_EXISTING);
+    public void delete(User user, Long id) {
+        ImageInfo imageInfo = imageRepository.findById(id);
+        if (imageInfo == null) {
+            int a = 0;
         }
-        catch (IOException e) {
-            throw new StorageException("Failed to store file " + originalFileName, e);
+        String fileName = imageInfo.getTargetFileName();
+        if (!imageInfo.isCreatedBy(user)) {
+            throw new AuthorizationFailureException();
         }
-    }
-
-    public Path load(String filename) {
-        return rootLocation.resolve(filename);
-    }
-
-    public Resource loadAsResource(String filename) {
-        try {
-            Path file = load(filename);
-            Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            } else {
-                throw new StorageFileNotFoundException(
-                        "Could not read file: " + filename);
-
-            }
-        } catch (MalformedURLException e) {
-            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
-        }
-    }
-
-    public void delete(String fileName) {
-        try {
-            Files.delete(this.rootLocation.resolve(fileName));
-        } catch (IOException e) {
-            throw new StorageFileNotFoundException("Could not delete file: " + fileName, e);
-        }
+        imageRepository.delete(id);
     }
 }

@@ -3,6 +3,7 @@ package lemonstream.image;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lemonstream.product.Product;
+import lemonstream.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -42,16 +44,23 @@ public class ImageInfo {
     private String targetFileName;
 
     @Column(name = "dis_order")
-    @NotNull
     private Integer displayOrder;
 
-    @ManyToOne
+    @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     @JsonIgnore
     private Product product;
 
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
     public ImageInfo(String originalFileName, String targetFileName) {
         this.originalFileName = originalFileName;
         this.targetFileName = targetFileName;
+    }
+
+    public boolean isCreatedBy(User user) {
+        return createdBy.equals(user);
     }
 }

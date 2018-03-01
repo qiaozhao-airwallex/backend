@@ -52,6 +52,9 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-actuator")
     // end::actuator[]
     compile("mysql:mysql-connector-java:6.0.6")
+
+    compile("com.restfb:restfb:2.2.0")
+
     testCompile("junit:junit")
     testCompile("org.springframework.boot:spring-boot-starter-test")
 }

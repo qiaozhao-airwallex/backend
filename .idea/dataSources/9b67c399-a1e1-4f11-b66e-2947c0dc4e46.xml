@@ -912,51 +912,46 @@
       <Charset>utf8mb4</Charset>
       <DefaultForCharset>0</DefaultForCharset>
     </collation>
-    <table id="230" parent="4" name="image">
+    <table id="230" parent="4" name="friend">
       <Engine>InnoDB</Engine>
     </table>
-    <table id="231" parent="4" name="product">
+    <table id="231" parent="4" name="image">
       <Engine>InnoDB</Engine>
     </table>
-    <table id="232" parent="4" name="user">
+    <table id="232" parent="4" name="product">
       <Engine>InnoDB</Engine>
     </table>
-    <column id="233" parent="230" name="id">
+    <table id="233" parent="4" name="user">
+      <Engine>InnoDB</Engine>
+    </table>
+    <column id="234" parent="230" name="user_id">
       <Position>1</Position>
       <DataType>int(10) unsigned|0</DataType>
       <NotNull>1</NotNull>
-      <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="234" parent="230" name="product_id">
+    <column id="235" parent="230" name="friend_id">
       <Position>2</Position>
       <DataType>int(10) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="235" parent="230" name="filename">
-      <Position>3</Position>
-      <DataType>varchar(100)|0</DataType>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="236" parent="230" name="dis_order">
-      <Position>4</Position>
-      <DataType>int(10) unsigned|0</DataType>
-      <NotNull>1</NotNull>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <index id="237" parent="230" name="product_idx">
-      <ColNames>product_id</ColNames>
+    <index id="236" parent="230" name="frd_user_idx">
+      <ColNames>user_id</ColNames>
     </index>
-    <key id="238" parent="230" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <foreign-key id="239" parent="230" name="image_ibfk_1">
-      <ColNames>product_id</ColNames>
+    <index id="237" parent="230" name="frd_friend_idx">
+      <ColNames>friend_id</ColNames>
+    </index>
+    <foreign-key id="238" parent="230" name="friend_ibfk_1">
+      <ColNames>user_id</ColNames>
       <RefSchemaName>my_garage</RefSchemaName>
-      <RefTableName>product</RefTableName>
+      <RefTableName>user</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="239" parent="230" name="friend_ibfk_2">
+      <ColNames>friend_id</ColNames>
+      <RefSchemaName>my_garage</RefSchemaName>
+      <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
     <column id="240" parent="231" name="id">
@@ -966,73 +961,124 @@
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="241" parent="231" name="subject">
+    <column id="241" parent="231" name="product_id">
       <Position>2</Position>
-      <DataType>varchar(50)|0</DataType>
-      <NotNull>1</NotNull>
+      <DataType>int(10) unsigned|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="242" parent="231" name="description">
+    <column id="242" parent="231" name="created_by">
       <Position>3</Position>
-      <DataType>varchar(1000)|0</DataType>
-      <NotNull>1</NotNull>
-      <DefaultExpression>&apos;&apos;</DefaultExpression>
-      <ColumnKind>normal</ColumnKind>
-    </column>
-    <column id="243" parent="231" name="owner_id">
-      <Position>4</Position>
       <DataType>int(10) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="244" parent="231" name="published">
-      <Position>5</Position>
-      <DataType>tinyint(1)|0</DataType>
+    <column id="243" parent="231" name="filename">
+      <Position>4</Position>
+      <DataType>varchar(100)|0</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="245" parent="231" name="owner_idx">
-      <ColNames>owner_id</ColNames>
+    <column id="244" parent="231" name="dis_order">
+      <Position>5</Position>
+      <DataType>int(10) unsigned|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="245" parent="231" name="product_idx">
+      <ColNames>product_id</ColNames>
     </index>
-    <key id="246" parent="231" name="PRIMARY">
+    <index id="246" parent="231" name="created_by_idx">
+      <ColNames>created_by</ColNames>
+    </index>
+    <key id="247" parent="231" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="247" parent="231" name="product_ibfk_1">
-      <ColNames>owner_id</ColNames>
+    <foreign-key id="248" parent="231" name="image_ibfk_1">
+      <ColNames>product_id</ColNames>
+      <RefSchemaName>my_garage</RefSchemaName>
+      <RefTableName>product</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <foreign-key id="249" parent="231" name="image_ibfk_2">
+      <ColNames>created_by</ColNames>
       <RefSchemaName>my_garage</RefSchemaName>
       <RefTableName>user</RefTableName>
       <RefColNames>id</RefColNames>
     </foreign-key>
-    <column id="248" parent="232" name="id">
+    <column id="250" parent="232" name="id">
       <Position>1</Position>
       <DataType>int(10) unsigned|0</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>1</SequenceIdentity>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="249" parent="232" name="username">
+    <column id="251" parent="232" name="subject">
       <Position>2</Position>
       <DataType>varchar(50)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <column id="250" parent="232" name="password">
+    <column id="252" parent="232" name="description">
+      <Position>3</Position>
+      <DataType>varchar(1000)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="253" parent="232" name="owner_id">
+      <Position>4</Position>
+      <DataType>int(10) unsigned|0</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="254" parent="232" name="published">
+      <Position>5</Position>
+      <DataType>tinyint(1)|0</DataType>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <index id="255" parent="232" name="owner_idx">
+      <ColNames>owner_id</ColNames>
+    </index>
+    <key id="256" parent="232" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="257" parent="232" name="product_ibfk_1">
+      <ColNames>owner_id</ColNames>
+      <RefSchemaName>my_garage</RefSchemaName>
+      <RefTableName>user</RefTableName>
+      <RefColNames>id</RefColNames>
+    </foreign-key>
+    <column id="258" parent="233" name="id">
+      <Position>1</Position>
+      <DataType>int(10) unsigned|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="259" parent="233" name="username">
+      <Position>2</Position>
+      <DataType>varchar(50)|0</DataType>
+      <NotNull>1</NotNull>
+      <ColumnKind>normal</ColumnKind>
+    </column>
+    <column id="260" parent="233" name="password">
       <Position>3</Position>
       <DataType>varchar(80)|0</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
-    <index id="251" parent="232" name="username">
+    <index id="261" parent="233" name="username">
       <ColNames>username</ColNames>
       <Unique>1</Unique>
     </index>
-    <key id="252" parent="232" name="PRIMARY">
+    <key id="262" parent="233" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="253" parent="232" name="username">
+    <key id="263" parent="233" name="username">
       <ColNames>username</ColNames>
       <UnderlyingIndexName>username</UnderlyingIndexName>
     </key>

@@ -1,16 +1,14 @@
 package lemonstream.image;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 
-public class ImageRepository {
-    private Map<String, ImageInfo> images = new HashMap<>();
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-    public void add(ImageInfo imageInfo) {
-        images.put(imageInfo.getTargetFileName(), imageInfo);
-    }
+import lemonstream.user.User;
 
-    public ImageInfo findOne(String fileName) {
-        return images.get(fileName);
-    }
+@Repository
+public interface ImageRepository  extends CrudRepository<ImageInfo, Long> {
+
+    ImageInfo findById(Long id);
 }

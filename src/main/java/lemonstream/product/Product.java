@@ -55,7 +55,6 @@ public class Product {
     @OrderBy("displayOrder ASC")
     private List<ImageInfo> imageList = new ArrayList<>();
 
-
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;

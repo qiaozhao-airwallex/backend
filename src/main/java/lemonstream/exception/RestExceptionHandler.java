@@ -205,4 +205,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
 
+    @ExceptionHandler(UserAlreadyExistException.class)
+    protected ResponseEntity<Object> handleUserAlreadyExistException(UserAlreadyExistException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
+
 }

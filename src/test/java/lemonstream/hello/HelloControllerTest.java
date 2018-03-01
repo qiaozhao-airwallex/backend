@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.restfb.DefaultFacebookClient;
+import com.restfb.FacebookClient;
+import com.restfb.Version;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +60,19 @@ public class HelloControllerTest {
 
         ObjectMapper mapper2 = new ObjectMapper();
         Object object = mapper2.readValue(result, Product.class);
+        int a = 0;
+    }
+
+    @Test
+    public void testB() {
+        FacebookClient client = new DefaultFacebookClient(Version.VERSION_2_12);
+        FacebookClient.AccessToken accessToken = client.obtainAppAccessToken("164841907632025", "7bc7e44a64bc09dbf9113c66701ab4f7");
+
+        FacebookClient client2 = new DefaultFacebookClient(accessToken.getAccessToken(), Version.VERSION_2_12);
+
+        FacebookClient.DebugTokenInfo debugTokenInfo = client2.debugToken(accessToken.getAccessToken());
+
+        FacebookClient.DebugTokenInfo debugTokenInfo2 = client2.debugToken("EAACV7D9ZAN5kBAFRhn3b79VCMnAWxGFZC0Go5COIje4FlykF6LVJvvImegQSoHkgixOBxWpEnvsKRH6Mifacn4ZCft3LRvUiXgVfFs8ZCZCakwUIHoKMHId540SY01WVpkOk1knfmZA9JGA8zSTU0RFHvy4I1qVdqUgAkoMptJIeGvjocAbz8GtPAKXmo6ZCyV0vn9ghZAX1MQZDZD");
         int a = 0;
     }
 

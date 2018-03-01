@@ -1,11 +1,22 @@
 package lemonstream.user;
 
+import java.util.Collection;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolationException;
+
+import com.restfb.FacebookClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import lemonstream.exception.InvalidParameterValueException;
+import lemonstream.exception.MissingRequiredParameterException;
+import lemonstream.exception.UserAlreadyExistException;
 
 @Service("userDetailsService")
 public class UserService implements UserDetailsService {
@@ -16,15 +27,69 @@ public class UserService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private HttpServletRequest request;
+
+    @Autowired
+    private FacebookClient facebookClient;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findOneByUsername(username);
+        User user = userRepository.findOneByUsername(username);
+        String social = request.getParameter("social");
+        if (social != null) {
+            if ("facebook".equals(social)) {
+                String accessToken = getRequiredField(request, "accessToken");
+                String userId = getRequiredField(request, "userID");
+                try {
+                    FacebookClient.DebugTokenInfo debugTokenInfo = facebookClient.debugToken(accessToken);
+                    if (debugTokenInfo.isValid() && userId.equals(debugTokenInfo.getUserId())) {
+                        String encodedPassword = passwordEncoder.encode(accessToken);
+                        if (user == null) {
+                            User newUser = new User();
+                            newUser.setUsername(username);
+                            newUser.setPassword(encodedPassword);
+                            userRepository.save(newUser);
+                            return newUser;
+                        } else {
+                            user.setPassword(encodedPassword);
+                            return user;
+                        }
+                    } else {
+                        throw new InsufficientAuthenticationException("Invalid token to verify a facebook user");
+                    }
+                } catch (Exception e) {
+                    throw new AuthenticationServiceException("Failed to a verify facebook user" ,e);
+                }
+            }
+            throw new InvalidParameterValueException("social", social);
+        }
+        if (user == null) {
+            throw new UsernameNotFoundException("Username: " + username + "is not found");
+        }
+        return user;
+    }
+
+    private String getRequiredField(HttpServletRequest request, String fieldName) {
+        String value = request.getParameter(fieldName);
+        if (value == null) {
+            throw new MissingRequiredParameterException(fieldName);
+        }
+        return value;
     }
 
     public User create(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User createdUser = userRepository.save(user);
-        createdUser.setPassword(null);
-        return createdUser;
+        try {
+            User createdUser = userRepository.save(user);
+            createdUser.setPassword(null);
+            return createdUser;
+        } catch (Exception e) {
+            throw new UserAlreadyExistException("User:" + user.getUsername() + " already exists");
+        }
+    }
+
+    public Collection<User> listFriends(User user) {
+        return userRepository.findByFriends(user.getId());
     }
 }

@@ -1,19 +1,16 @@
-package lemonstream;
+package lemonstream.Configuration;
 
+import com.restfb.DefaultFacebookClient;
+import com.restfb.FacebookClient;
+import com.restfb.Version;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import lemonstream.image.ImageRepository;
 import lemonstream.image.ImageService;
-import lemonstream.product.ProductRepository;
+import lemonstream.image.PhysicalImageRepository;
 import lemonstream.product.ProductService;
 
 @Configuration
@@ -22,18 +19,8 @@ public class AppConfig {
     private String imageUploadedLocation = "uploaded";
 
     @Bean
-    public ProductService productService() {
-        return new ProductService();
-    }
-
-    @Bean
-    public ImageRepository imageRepository() {
-        return new ImageRepository();
-    }
-
-    @Bean
-    public ImageService imageService() {
-        return new ImageService(imageUploadedLocation);
+    public PhysicalImageRepository physicalImageRepository() {
+        return new PhysicalImageRepository(imageUploadedLocation);
     }
 
     @Bean
@@ -54,5 +41,14 @@ public class AppConfig {
 //                        .allowedHeaders("*");
 //            }
         };
+    }
+
+    @Bean
+    public FacebookClient facebookClient() {
+        Version version = Version.VERSION_2_12;
+        FacebookClient client = new DefaultFacebookClient(version);
+        FacebookClient.AccessToken accessToken = client.obtainAppAccessToken("164841907632025", "7bc7e44a64bc09dbf9113c66701ab4f7");
+
+        return new DefaultFacebookClient(accessToken.getAccessToken(), version);
     }
 }
