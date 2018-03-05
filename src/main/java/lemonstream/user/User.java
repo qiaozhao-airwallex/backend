@@ -16,8 +16,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,6 +34,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Entity
 @Table(name = "user")
+@JsonSerialize(using = UserSerializer.class)
 public class User implements UserDetails{
 
     @Id
@@ -45,7 +45,6 @@ public class User implements UserDetails{
     private String username;
 
     @NotNull
-    @JsonIgnore
     private String password;
 
     @OneToMany(mappedBy = "owner",
@@ -53,7 +52,6 @@ public class User implements UserDetails{
             targetEntity = Product.class,
             orphanRemoval = true)
     @OrderBy("id ASC")
-    @JsonBackReference
     private List<Product> productList = new ArrayList<>();
 
     @ManyToMany
@@ -62,7 +60,6 @@ public class User implements UserDetails{
             inverseJoinColumns = @JoinColumn(name = "friend_id", referencedColumnName = "id"))
     private List<User> friends = new ArrayList<>();
 
-    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -70,29 +67,26 @@ public class User implements UserDetails{
         return authorities;
     }
 
-    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         // we never lock accounts
         return true;
     }
 
-    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         // credentials never expire
         return true;
     }
 
-    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
     }
+
 }

@@ -37,6 +37,7 @@ public class ImageInfo {
     private Long id;
 
     @Transient
+    @JsonIgnore
     private String originalFileName;
 
     @Column(name = "filename")
@@ -53,6 +54,7 @@ public class ImageInfo {
 
     @ManyToOne
     @JoinColumn(name = "created_by")
+    @JsonIgnore
     private User createdBy;
 
     public ImageInfo(String originalFileName, String targetFileName) {

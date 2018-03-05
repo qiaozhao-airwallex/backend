@@ -2,7 +2,6 @@ package lemonstream.user;
 
 import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
 
 import com.restfb.FacebookClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import lemonstream.exception.EntityNotFoundException;
 import lemonstream.exception.InvalidParameterValueException;
 import lemonstream.exception.MissingRequiredParameterException;
 import lemonstream.exception.UserAlreadyExistException;
@@ -89,7 +89,11 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public Collection<User> listFriends(User user) {
-        return userRepository.findByFriends(user.getId());
+    public User findOne(Long id) throws EntityNotFoundException {
+        User user = userRepository.findOne(id);
+        if (user == null) {
+            throw new EntityNotFoundException(User.class, "id", id.toString());
+        }
+        return user;
     }
 }
