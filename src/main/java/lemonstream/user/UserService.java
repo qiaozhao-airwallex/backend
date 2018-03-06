@@ -41,6 +41,7 @@ public class UserService implements UserDetailsService {
             if ("facebook".equals(social)) {
                 String accessToken = getRequiredField(request, "accessToken");
                 String userId = getRequiredField(request, "userID");
+                String name = getRequiredField(request, "name");
                 try {
                     FacebookClient.DebugTokenInfo debugTokenInfo = facebookClient.debugToken(accessToken);
                     if (debugTokenInfo.isValid() && userId.equals(debugTokenInfo.getUserId())) {
@@ -48,6 +49,7 @@ public class UserService implements UserDetailsService {
                         if (user == null) {
                             User newUser = new User();
                             newUser.setUsername(username);
+                            newUser.setName(name);
                             newUser.setPassword(encodedPassword);
                             userRepository.save(newUser);
                             return newUser;

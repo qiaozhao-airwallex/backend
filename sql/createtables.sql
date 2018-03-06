@@ -1,7 +1,13 @@
+DROP TABLE friend;
+DROP TABLE image;
+DROP TABLE product;
+DROP TABLE user;
+
 create table user
 (
   id            INT unsigned NOT NULL AUTO_INCREMENT,
   username      varchar(50) not null,
+  name          varchar(50) not null,
   password      varchar(80) not null,
   PRIMARY KEY   (id),
   UNIQUE KEY    (username)

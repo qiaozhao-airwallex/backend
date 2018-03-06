@@ -47,15 +47,6 @@ public class OAuth2ConfigurerAdapter extends AuthorizationServerConfigurerAdapte
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    @Primary
-//    public AuthorizationServerTokenServices tokenServices() {
-//        DefaultTokenServices tokenServices = new DefaultTokenServices();
-//        tokenServices.setTokenStore(new InMemoryTokenStore());
-//        tokenServices.setTokenEnhancer(tokenEnhancer());
-//        return tokenServices;
-//    }
-//
     @Bean
     public TokenEnhancer tokenEnhancer() {
         return new TokenEnhancer() {
@@ -64,6 +55,7 @@ public class OAuth2ConfigurerAdapter extends AuthorizationServerConfigurerAdapte
                 User user = (User) authentication.getPrincipal();
                 final Map<String, Object> additionalInfo = new HashMap<>();
                 additionalInfo.put("userID", user.getId());
+                additionalInfo.put("name", user.getName());
                 additionalInfo.put("email", user.getUsername());
                 ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
                 return accessToken;

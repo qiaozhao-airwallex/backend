@@ -45,6 +45,9 @@ public class User implements UserDetails{
     private String username;
 
     @NotNull
+    private String name;
+
+    @NotNull
     private String password;
 
     @OneToMany(mappedBy = "owner",
