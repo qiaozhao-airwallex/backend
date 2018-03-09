@@ -98,4 +98,8 @@ public class UserService implements UserDetailsService {
         }
         return user;
     }
+
+    public Collection<User> findAllFriends(Long id) throws EntityNotFoundException {
+        return findOne(id).getFriends();
+    }
 }

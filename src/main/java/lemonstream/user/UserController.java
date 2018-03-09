@@ -6,16 +6,19 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.common.exceptions.UnauthorizedUserException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lemonstream.exception.AuthorizationFailureException;
 import lemonstream.exception.EntityNotFoundException;
+import lemonstream.exception.InvalidParameterValueException;
+import lemonstream.product.Product;
+import lemonstream.product.ProductService;
 
 @RestController
 @RequestMapping("/user")
@@ -30,14 +33,18 @@ public class UserController {
         return userService.create(user);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/me", method = RequestMethod.GET)
     @ResponseBody
-    public User list(Principal principal, @PathVariable Long id)  throws EntityNotFoundException {
+    public User findOne(Principal principal) throws EntityNotFoundException {
         User user = (User) ((Authentication) principal).getPrincipal();
-        if (user.getId() != id) {
-            throw new AuthorizationFailureException();
-        }
-        return userService.findOne(id);
+        return userService.findOne(user.getId());
+    }
+
+    @RequestMapping(value = "/me/friends/", method = RequestMethod.GET)
+    @ResponseBody
+    public Collection<User> listMyFriends(Principal principal) throws EntityNotFoundException {
+        User user = (User) ((Authentication) principal).getPrincipal();
+        return userService.findAllFriends(user.getId());
     }
 
 }

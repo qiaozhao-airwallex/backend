@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import lemonstream.exception.AuthorizationFailureException;
 import lemonstream.exception.EntityNotFoundException;
 import lemonstream.exception.InvalidParameterValueException;
 import lemonstream.user.User;
+import lemonstream.user.UserService;
 
 @RestController
 @RequestMapping("/product")
@@ -23,6 +25,9 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
@@ -37,14 +42,29 @@ public class ProductController {
         return productService.findOne(id);
     }
 
+
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Collection<Product> list(@RequestParam String category, Principal principal) {
-        User user = (User) ((Authentication) principal).getPrincipal();
+    public Collection<Product> listProducts(@RequestParam(defaultValue = "published") String category,
+                                            @RequestParam(required = false) Long userId,
+                                            Principal principal) throws EntityNotFoundException {
+        User loginUser = (User) ((Authentication) principal).getPrincipal();
+        User user;
+        if (userId == null) {
+            user = loginUser;
+        } else {
+            user = userService.findOne(userId);
+        }
+
+        if (!loginUser.equals(user) && !user.isFriendOf(loginUser)) {
+            throw new AuthorizationFailureException("You can only see your own products or your friends published products");
+        }
         if ("published".equals(category)) {
-            Collection<Product> products = productService.listPublished(user);
-            return products;
-        } else if ("unPublished".equals(category)){
+            return productService.listPublished(user);
+        } else if ("unPublished".equals(category)) {
+            if (!loginUser.equals(user)) {
+                throw new AuthorizationFailureException("You can only see your friends' published products");
+            }
             return productService.listUnPublished(user);
         }
         throw new InvalidParameterValueException("category", category);
