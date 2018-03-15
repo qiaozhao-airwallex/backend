@@ -5,11 +5,13 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.*;
 
 import org.assertj.core.util.Lists;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import lemonstream.image.ImageInfo;
 import lemonstream.product.Product;
 
+@Ignore
 public class MyBeanUtilsTest {
 
     @Test
