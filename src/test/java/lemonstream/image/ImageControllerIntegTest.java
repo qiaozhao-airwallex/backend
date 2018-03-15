@@ -25,6 +25,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import lemonstream.BaseControllerIntegTest;
 import lemonstream.product.Product;
 
+@Ignore
 public class ImageControllerIntegTest extends BaseControllerIntegTest {
 
     @Test

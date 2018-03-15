@@ -12,6 +12,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -22,6 +23,7 @@ import lemonstream.BaseControllerIntegTest;
 import lemonstream.image.ImageInfo;
 import lemonstream.user.User;
 
+@Ignore
 public class ProductControllerIntegTest extends BaseControllerIntegTest {
 
     @Before

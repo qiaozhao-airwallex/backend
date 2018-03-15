@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import lemonstream.BaseControllerIntegTest;
 import lemonstream.product.Product;
 
+@Ignore
 public class HelloControllerIntegTest extends BaseControllerIntegTest {
 
     @Test
